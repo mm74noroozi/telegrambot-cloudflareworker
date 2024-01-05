@@ -1,15 +1,17 @@
 export default {
   async fetch(request, env) {
-    const bot_token = "sample_bot_token";
-    const chat_id = 123456789;
     try {
       const { pathname } = new URL(request.url);
-      const contentType = request.headers.get('content-type');
+      const contentType = request.headers.get('Content-Type');
       if (pathname.startsWith("/notif")) {
-        let message = 'Hi from cloudflare' 
+        let message = 'Hi from cloudflare'
+        let photo = "http://tange.s3.ir-thr-at1.arvanstorage.com/MN.JPG"
         if (request.method === 'POST' && contentType.includes('application/json'))  {
           const body = await request.json();
           message = body.message;
+          if(body.photo){
+            photo = body.photo
+          }
         }
         const options = {
           method: 'POST',
@@ -17,14 +19,18 @@ export default {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            chat_id: chat_id,
-            text: message
+            chat_id: 103741994,
+            caption: message,
+            photo: photo,
+            parse_mode: "HTML"
           })
         }
-        return fetch(`https://api.telegram.org/${bot_token}/sendMessage`,options);
+        // return new Response(JSON.stringify(options))
+        return fetch("https://api.telegram.org/<bot_token>/sendPhoto", options);
       }
+      return fetch("https://s100.divarcdn.com/static/photo/thumbnail/NDnxJq0cctC_Va8-t3Fn0w/c9e17691-fad4-48a0-b462-3e484fcfb110.jpg")
     } catch(e) {
-      return new Response(err.stack, { status: 500 })
+      return new Response(e.stack, { status: 500 })
     }
   }
 }
