@@ -19,7 +19,7 @@ export default {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            chat_id: 103741994,
+            chat_id: <chat_id>,
             caption: message,
             photo: photo,
             parse_mode: "HTML"
